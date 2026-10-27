@@ -64,13 +64,6 @@ html {
 	-webkit-text-size-adjust: 100%;
 }
 
-/* All sizes are in rem, so this scales the whole layout by 110% on laptop-sized screens and up */
-@media (min-width: 48em) {
-	html {
-		font-size: 110%;
-	}
-}
-
 body {
 	min-height: 100vh;
 	display: flex;

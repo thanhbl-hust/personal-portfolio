@@ -147,7 +147,7 @@ ci: pin pages actions to latest major versions
 
 - **Base path**: the site is served under `/personal-portfolio/`. Build internal links and asset URLs with `withBase()` from `src/utils/url.ts`, never as bare absolute paths.
 - **Styling**: use the CSS variables from `src/styles/global.css` (e.g. `var(--accent)`) instead of hardcoded colors, so both dark and light themes work.
-- **Sizing**: use `rem` for font sizes and spacing. The root font size is 110% on screens ≥ 48em, and `rem` values scale with it.
+- **Sizing**: use `rem` for font sizes and spacing so the layout scales with the browser's font size setting. The root font size is the browser default (100%).
 - **Layout width**: content is 52rem wide. Pages that pass `wide` to `BaseLayout` (posts with a table of contents) grow to 72rem on screens ≥ 64em, the same breakpoint where the table of contents becomes a sidebar.
 - **Floating buttons**: use the global `.fab` class for buttons fixed to the bottom-right corner, and stack them so they don't overlap (BackToTop at the bottom, the table of contents toggle above it).
 - **Font**: JetBrains Mono for all text.
