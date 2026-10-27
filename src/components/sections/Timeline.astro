@@ -1,0 +1,115 @@
+---
+import TagList from '../ui/TagList.astro';
+
+export interface TimelineItem {
+	period: string;
+	title: string;
+	subtitle: string;
+	location?: string;
+	points?: string[];
+	tags?: string[];
+}
+
+interface Props {
+	items: TimelineItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ol class="timeline">
+	{
+		items.map((item) => (
+			<li class="item">
+				<p class="period">{item.period}</p>
+				<h3 class="title">{item.title}</h3>
+				<p class="subtitle">
+					{item.subtitle}
+					{item.location && <span class="location">· {item.location}</span>}
+				</p>
+				{item.points && (
+					<ul class="points">
+						{item.points.map((point) => (
+							<li>{point}</li>
+						))}
+					</ul>
+				)}
+				{item.tags && (
+					<div class="tags">
+						<TagList items={item.tags} />
+					</div>
+				)}
+			</li>
+		))
+	}
+</ol>
+
+<style>
+	.timeline {
+		border-left: 1px solid var(--border);
+		margin-left: 0.35rem;
+	}
+
+	.item {
+		position: relative;
+		padding: 0 0 2rem 1.5rem;
+	}
+
+	.item:last-child {
+		padding-bottom: 0;
+	}
+
+	.item::before {
+		content: '';
+		position: absolute;
+		top: 0.5rem;
+		left: calc(-0.35rem - 0.5px);
+		width: 0.7rem;
+		height: 0.7rem;
+		border: 2px solid var(--accent);
+		border-radius: 50%;
+		background-color: var(--bg);
+	}
+
+	.period {
+		color: var(--yellow);
+		font-size: var(--text-sm);
+	}
+
+	.title {
+		margin-top: 0.15rem;
+		font-size: var(--text-lg);
+	}
+
+	.subtitle {
+		color: var(--accent);
+	}
+
+	.location {
+		color: var(--text-muted);
+	}
+
+	.points {
+		margin-top: 0.75rem;
+	}
+
+	.points li {
+		position: relative;
+		padding-left: 1.25rem;
+	}
+
+	.points li + li {
+		margin-top: 0.35rem;
+	}
+
+	.points li::before {
+		content: '-';
+		position: absolute;
+		left: 0;
+		color: var(--text-muted);
+	}
+
+	.tags {
+		margin-top: 0.85rem;
+	}
+</style>

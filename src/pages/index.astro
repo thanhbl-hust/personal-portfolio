@@ -1,0 +1,50 @@
+---
+import ProfileHero from '../components/sections/ProfileHero.astro';
+import Section from '../components/sections/Section.astro';
+import TechStack from '../components/sections/TechStack.astro';
+import Timeline from '../components/sections/Timeline.astro';
+import { EDUCATION, EXPERIENCE, PROFILE, TECH_STACK } from '../data/cv';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const educationItems = EDUCATION.map((edu) => ({
+	period: edu.period,
+	title: edu.school,
+	subtitle: edu.degree,
+	points: edu.details,
+}));
+
+const experienceItems = EXPERIENCE.map((job) => ({
+	period: job.period,
+	title: job.role,
+	subtitle: job.company,
+	location: job.location,
+	points: job.highlights,
+	tags: job.stack,
+}));
+---
+
+<BaseLayout>
+	<ProfileHero />
+
+	<Section id="about" title="about">
+		{PROFILE.about.map((paragraph) => <p class="paragraph">{paragraph}</p>)}
+	</Section>
+
+	<Section id="education" title="education">
+		<Timeline items={educationItems} />
+	</Section>
+
+	<Section id="experience" title="experience">
+		<Timeline items={experienceItems} />
+	</Section>
+
+	<Section id="tech-stack" title="tech stack">
+		<TechStack groups={TECH_STACK} />
+	</Section>
+</BaseLayout>
+
+<style>
+	.paragraph + .paragraph {
+		margin-top: 1rem;
+	}
+</style>

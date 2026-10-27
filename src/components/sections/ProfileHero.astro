@@ -1,0 +1,101 @@
+---
+import { PROFILE } from '../../data/cv';
+import TerminalWindow from '../ui/TerminalWindow.astro';
+
+const githubLabel = PROFILE.github.replace(/^https?:\/\//, '');
+---
+
+<TerminalWindow title="~/whoami.sh">
+	<p class="cmd"><span class="prompt">$</span> whoami</p>
+	<h1 class="name">{PROFILE.name}</h1>
+	<p class="role">{PROFILE.role}</p>
+
+	<p class="cmd"><span class="prompt">$</span> cat profile.yaml</p>
+	<dl class="yaml">
+		<div>
+			<dt>born:</dt>
+			<dd class="number">{PROFILE.birthYear}</dd>
+		</div>
+		<div>
+			<dt>location:</dt>
+			<dd class="string">"{PROFILE.location}"</dd>
+		</div>
+		<div>
+			<dt>github:</dt>
+			<dd><a href={PROFILE.github}>{githubLabel}</a></dd>
+		</div>
+	</dl>
+
+	<p class="cmd"><span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></p>
+</TerminalWindow>
+
+<style>
+	.cmd {
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+
+	.prompt {
+		color: var(--green);
+		font-weight: 700;
+	}
+
+	.name {
+		margin-top: 0.5rem;
+		font-size: var(--text-2xl);
+	}
+
+	.role {
+		margin-bottom: 1.5rem;
+		color: var(--accent);
+		font-weight: 500;
+	}
+
+	.yaml {
+		margin: 0.5rem 0 1.5rem;
+		font-size: var(--text-sm);
+	}
+
+	.yaml div {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 0.75ch;
+	}
+
+	.yaml dt {
+		color: var(--purple);
+	}
+
+	.yaml dd {
+		overflow-wrap: anywhere;
+	}
+
+	.number {
+		color: var(--yellow);
+	}
+
+	.string {
+		color: var(--green);
+	}
+
+	.cursor {
+		display: inline-block;
+		width: 0.6em;
+		height: 1.1em;
+		vertical-align: text-bottom;
+		background-color: var(--text);
+		animation: blink 1s steps(1) infinite;
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (min-width: 40em) {
+		.name {
+			font-size: var(--text-3xl);
+		}
+	}
+</style>

@@ -1,0 +1,29 @@
+---
+interface Props {
+	items: readonly string[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="tags">
+	{items.map((item) => <li class="tag">{item}</li>)}
+</ul>
+
+<style>
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.tag {
+		padding: 0.15rem 0.6rem;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background-color: var(--accent-soft);
+		color: var(--heading);
+		font-size: var(--text-xs);
+		line-height: 1.6;
+	}
+</style>

@@ -1,0 +1,46 @@
+---
+import type { TechGroup } from '../../data/cv';
+import TagList from '../ui/TagList.astro';
+
+interface Props {
+	groups: TechGroup[];
+}
+
+const { groups } = Astro.props;
+---
+
+<div class="stack">
+	{
+		groups.map((group) => (
+			<div class="group">
+				<h3 class="category">
+					<span aria-hidden="true">// </span>
+					{group.category}
+				</h3>
+				<TagList items={group.items} />
+			</div>
+		))
+	}
+</div>
+
+<style>
+	.stack {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+		gap: 1rem;
+	}
+
+	.group {
+		padding: 1rem 1.25rem 1.25rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background-color: var(--surface);
+	}
+
+	.category {
+		margin-bottom: 0.75rem;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+		font-weight: 500;
+	}
+</style>

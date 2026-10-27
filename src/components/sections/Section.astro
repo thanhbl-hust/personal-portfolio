@@ -1,0 +1,39 @@
+---
+interface Props {
+	id: string;
+	title: string;
+	/** Use 1 when the section title is the page's main heading. */
+	level?: 1 | 2;
+}
+
+const { id, title, level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
+---
+
+<section id={id} class="section" aria-labelledby={`${id}-title`}>
+	<Heading id={`${id}-title`} class="section-title">
+		<span class="hash" aria-hidden="true">#</span>
+		{title}
+	</Heading>
+	<slot />
+</section>
+
+<style>
+	.section {
+		margin-top: 3.5rem;
+		scroll-margin-top: 4.5rem;
+	}
+
+	.section:first-child {
+		margin-top: 0;
+	}
+
+	.section-title {
+		margin-bottom: 1.25rem;
+		font-size: var(--text-xl);
+	}
+
+	.hash {
+		color: var(--accent);
+	}
+</style>
