@@ -79,11 +79,13 @@ export const EXPERIENCE: Experience[] = [
 ];
 
 export const TECH_STACK: TechGroup[] = [
-	{ category: 'cloud', items: ['AWS', 'Google Cloud'] },
-	{ category: 'containers', items: ['Docker', 'Kubernetes', 'Helm'] },
-	{ category: 'infrastructure as code', items: ['Terraform', 'Ansible'] },
-	{ category: 'ci/cd', items: ['GitHub Actions', 'GitLab CI', 'Argo CD'] },
-	{ category: 'observability', items: ['Prometheus', 'Grafana', 'Loki'] },
-	{ category: 'languages', items: ['Bash', 'Python', 'Go'] },
-	{ category: 'os & networking', items: ['Linux', 'Nginx', 'DNS', 'TCP/IP'] },
+	{
+		category: 'security & compliance',
+		items: ['SOPS', 'External Secrets', 'Trivy', 'Gitleaks', 'Firezone (WireGuard)', 'Vanta (SOC 2)'],
+	},
+	{ category: 'cloud platform', items: ['AWS'] },
+	{ category: 'infrastructure as code', items: ['Terraform', 'Atlantis', 'TFLint', 'tfsec', 'Checkov'] },
+	{ category: 'containerization & orchestration', items: ['Docker', 'Kubernetes', 'KEDA', 'Karpenter', 'Helm', 'Kustomize'] },
+	{ category: 'ci/cd & gitops', items: ['GitHub Actions', 'GitLab', 'Argo CD'] },
+	{ category: 'observability', items: ['Prometheus', 'Grafana', 'Loki', 'Alloy', 'Fluent Bit'] },
 ];
