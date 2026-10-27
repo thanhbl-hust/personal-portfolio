@@ -7,3 +7,21 @@ tags: [kubernetes, architecture]
 
 > [!NOTE]
 > Bài viết đang được hoàn thiện.
+
+## Control Plane
+
+### api-server
+
+### etcd
+
+### scheduler
+
+### controller-manager
+
+## Worker Node
+
+### kubelet
+
+### kube-proxy
+
+### container runtime
