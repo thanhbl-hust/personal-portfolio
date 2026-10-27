@@ -9,7 +9,7 @@ export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
 
 // Dark theme colors from src/styles/global.css (CSS variables aren't available outside the browser)
-const COLORS = {
+export const COLORS = {
 	bg: '#0f1117',
 	surface: '#161a23',
 	surface2: '#1d2230',

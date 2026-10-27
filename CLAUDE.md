@@ -107,10 +107,12 @@ ci: pin pages actions to latest major versions
 │   │   │   ├── [...slug].astro   # Single post (/blog/<slug>/)
 │   │   │   └── tags/
 │   │   │       └── [tag].astro   # Posts with a given tag (/blog/tags/<tag>/)
-│   │   └── og/                   # Social preview images (og:image), rendered to PNG at build time
-│   │       ├── site.png.ts       # Default image for every page (/og/site.png)
-│   │       └── blog/
-│   │           └── [slug].png.ts # One image per post (/og/blog/<slug>.png)
+│   │   ├── og/                   # Social preview images (og:image), rendered to PNG at build time
+│   │   │   ├── site.png.ts       # Default image for every page (/og/site.png)
+│   │   │   └── blog/
+│   │   │       └── [slug].png.ts # One image per post (/og/blog/<slug>.png)
+│   │   └── stats/
+│   │       └── lines-added.svg.ts # Lines-added-per-day chart embedded in README.md (/stats/lines-added.svg)
 │   ├── plugins/
 │   │   └── markdown-callouts.mjs # Sätteri plugin for > [!NOTE] style callouts
 │   ├── styles/
@@ -118,6 +120,7 @@ ci: pin pages actions to latest major versions
 │   ├── utils/
 │   │   ├── og.ts                 # renderOgImage(): terminal-style social preview cards (Satori + sharp)
 │   │   ├── posts.ts              # Blog helpers: getPosts, getTags, getTocItems, post/tag URLs, dates
+│   │   ├── stats.ts              # Lines added per day from git history, drawn as an SVG bar chart
 │   │   ├── text.ts               # foldText() for accent-insensitive matching and slugs
 │   │   └── url.ts                # withBase() for base-path-aware links
 │   ├── config.ts                 # Site-wide settings: title, initials, nav links
@@ -125,6 +128,7 @@ ci: pin pages actions to latest major versions
 ├── astro.config.mjs              # Astro config: base path, Markdown processor, Expressive Code
 ├── CLAUDE.md                     # Guidance for Claude Code (this file)
 ├── package.json                  # Scripts and dependencies
+├── README.md                     # Repository front page on GitHub, with the lines-added chart
 └── tsconfig.json                 # TypeScript config (extends Astro's strict preset)
 ```
 
@@ -139,7 +143,7 @@ ci: pin pages actions to latest major versions
 | `src/content/blog/`        | Blog posts. Each post is a folder named after its URL slug, containing `index.md` and an `images/` folder.                                    |
 | `src/data/`                | Content as typed data. Edit `cv.ts` to change what the CV page shows — no markup changes needed.                                              |
 | `src/layouts/`             | Page shells. `BaseLayout` holds `<head>` metadata, fonts, theme script, nav, and footer; `PostLayout` wraps it for blog posts.               |
-| `src/pages/`               | Routes. Each `.astro` file becomes a page at the matching URL; `[param]` files generate one page per post or tag. `og/*.png.ts` endpoints generate the social preview images. |
+| `src/pages/`               | Routes. Each `.astro` file becomes a page at the matching URL; `[param]` files generate one page per post or tag. `og/*.png.ts` endpoints generate the social preview images, and `stats/lines-added.svg.ts` the README chart. |
 | `src/plugins/`             | Markdown processor plugins, written against the Sätteri plugin API.                                                                           |
 | `src/styles/`              | Global CSS only. Component-specific styles live in each component's `<style>` block.                                                         |
 | `src/utils/`               | Plain TypeScript helpers with no markup.                                                                                                      |
@@ -156,7 +160,8 @@ ci: pin pages actions to latest major versions
 - **Layout width**: content is 52rem wide. Pages that pass `wide` to `BaseLayout` (posts with a table of contents) grow to 72rem on screens ≥ 64em, the same breakpoint where the table of contents becomes a sidebar.
 - **Floating buttons**: use the global `.fab` class for buttons fixed to the bottom-right corner, and stack them so they don't overlap (BackToTop at the bottom, the table of contents toggle above it).
 - **Font**: JetBrains Mono for all text.
-- **Social previews**: every page has an `og:image`. Pages use `/og/site.png` by default; posts pass their own `/og/blog/<slug>.png` through `BaseLayout`'s `image` prop. The images are drawn by `src/utils/og.ts`, which copies the dark theme colors from `global.css` (CSS variables don't exist outside the browser), so change both together.
+- **Social previews**: every page has an `og:image`. Pages use `/og/site.png` by default; posts pass their own `/og/blog/<slug>.png` through `BaseLayout`'s `image` prop. The images are drawn by `src/utils/og.ts`, which copies the dark theme colors from `global.css` (CSS variables don't exist outside the browser), so change both together. The README chart (`src/utils/stats.ts`) reuses those colors.
+- **README chart**: `README.md` embeds `/stats/lines-added.svg` from the live site, which counts lines added per day with `git log --numstat` at build time (the day before the first commit is 0, and `package-lock.json` and binary files are skipped). It updates on every deploy, so never commit a static copy of it.
 
 ## Writing Blog Posts
 
@@ -172,5 +177,5 @@ The post `src/content/blog/how-to-write-a-blog/index.md` is the full reference f
 
 ## Deployment
 
-- Pushing to `main` triggers `.github/workflows/deploy.yml`, which runs `npm ci` and `npm run build`, then deploys `dist/` to GitHub Pages (Pages source: **GitHub Actions**).
+- Pushing to `main` triggers `.github/workflows/deploy.yml`, which runs `npm ci` and `npm run build`, then deploys `dist/` to GitHub Pages (Pages source: **GitHub Actions**). The checkout fetches the full git history, which the README chart needs.
 - Only the build output is published, but the repository itself is public. Never commit secrets or private files.
