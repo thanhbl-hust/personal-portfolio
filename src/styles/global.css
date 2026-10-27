@@ -62,6 +62,8 @@
 
 html {
 	-webkit-text-size-adjust: 100%;
+	/* Always reserve the scrollbar's space so short and long pages line up */
+	scrollbar-gutter: stable;
 }
 
 body {
