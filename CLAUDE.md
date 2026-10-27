@@ -86,7 +86,7 @@ ci: pin pages actions to latest major versions
 ├── public/                       # Static files copied to the build as-is
 ├── src/
 │   ├── components/
-│   │   ├── blog/                 # Blog UI: PostList, PostCard, PostMeta, PostHeader, PostSearch, TableOfContents, Prose
+│   │   ├── blog/                 # Blog UI: PostList, PostCard, PostMeta, PostHeader, PostSearch, TableOfContents, ReadingProgress, Prose
 │   │   ├── layout/               # Site-wide chrome: Nav, Footer
 │   │   ├── sections/             # Page sections: ProfileHero, Section, Timeline, TechStack
 │   │   └── ui/                   # Small reusable pieces: TerminalWindow, TagList, ThemeToggle, BackToTop
@@ -99,7 +99,7 @@ ci: pin pages actions to latest major versions
 │   │   └── cv.ts                 # All CV content (profile, education, experience, tech stack)
 │   ├── layouts/
 │   │   ├── BaseLayout.astro      # HTML shell shared by every page
-│   │   └── PostLayout.astro      # Blog post: header, content, and table of contents sidebar
+│   │   └── PostLayout.astro      # Blog post: reading progress bar, header, content, and table of contents sidebar
 │   ├── pages/                    # File-based routes
 │   │   ├── index.astro           # CV page (/)
 │   │   └── blog/

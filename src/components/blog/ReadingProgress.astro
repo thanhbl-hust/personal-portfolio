@@ -1,0 +1,46 @@
+<!-- Decorative: the bar repeats what the scroll position already tells assistive tech -->
+<div class="reading-progress" aria-hidden="true"></div>
+
+<script>
+	// Fills from 0 when the [data-progress-target] element's top reaches the top of the viewport
+	// to 1 when its bottom reaches the bottom of the viewport
+	const bar = document.querySelector<HTMLElement>('.reading-progress');
+	const target = document.querySelector<HTMLElement>('[data-progress-target]');
+
+	if (bar && target) {
+		let frame = 0;
+
+		const update = () => {
+			frame = 0;
+			const rect = target.getBoundingClientRect();
+			const scrollable = rect.height - window.innerHeight;
+			const progress = scrollable <= 0 ? 1 : Math.min(Math.max(-rect.top / scrollable, 0), 1);
+			bar.style.transform = `scaleX(${progress})`;
+		};
+
+		const schedule = () => {
+			if (!frame) frame = requestAnimationFrame(update);
+		};
+
+		window.addEventListener('scroll', schedule, { passive: true });
+		window.addEventListener('resize', schedule);
+		// Images, fonts, and collapsible sections change the article's height after load
+		new ResizeObserver(schedule).observe(target);
+		update();
+	}
+</script>
+
+<style>
+	.reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 20;
+		width: 100%;
+		height: 3px;
+		background-color: var(--accent);
+		transform: scaleX(0);
+		transform-origin: left;
+		pointer-events: none;
+	}
+</style>

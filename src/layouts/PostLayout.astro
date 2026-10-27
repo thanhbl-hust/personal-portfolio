@@ -1,6 +1,7 @@
 ---
 import PostHeader from '../components/blog/PostHeader.astro';
 import Prose from '../components/blog/Prose.astro';
+import ReadingProgress from '../components/blog/ReadingProgress.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
 import { SITE } from '../config';
 import { getTocItems, type Heading, type Post } from '../utils/posts';
@@ -17,6 +18,7 @@ const hasToc = tocItems.length > 0;
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description} wide={hasToc}>
+	<ReadingProgress />
 	<article class:list={['post', { 'has-toc': hasToc }]}>
 		<div class="post-header">
 			<PostHeader post={post} />
@@ -28,7 +30,7 @@ const hasToc = tocItems.length > 0;
 				</div>
 			)
 		}
-		<div class="post-body" lang={SITE.postLang}>
+		<div class="post-body" lang={SITE.postLang} data-progress-target>
 			<Prose>
 				<slot />
 			</Prose>
