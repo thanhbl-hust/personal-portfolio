@@ -117,7 +117,7 @@ ci: pin pages actions to latest major versions
 │   │   └── global.css            # Design tokens (colors, fonts, sizes), reset, utilities
 │   ├── utils/
 │   │   ├── og.ts                 # renderOgImage(): terminal-style social preview cards (Satori + sharp)
-│   │   ├── posts.ts              # Blog helpers: getPosts, getTags, getTocItems, post/tag URLs, reading time, dates
+│   │   ├── posts.ts              # Blog helpers: getPosts, getTags, getTocItems, post/tag URLs, dates
 │   │   ├── text.ts               # foldText() for accent-insensitive matching and slugs
 │   │   └── url.ts                # withBase() for base-path-aware links
 │   ├── config.ts                 # Site-wide settings: title, initials, nav links

@@ -54,8 +54,5 @@ export const getTags = (posts: Post[]): TagSummary[] => {
 export const getTocItems = (headings: Heading[]) =>
 	headings.filter((heading) => (heading.depth === 2 || heading.depth === 3) && heading.slug !== 'footnote-label');
 
-/** Estimated reading time in minutes, at about 200 words per minute. */
-export const readingTime = (body = '') => Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 200));
-
 /** Formats a date as YYYY-MM-DD. Frontmatter dates are parsed as UTC midnight. */
 export const formatDate = (date: Date) => date.toISOString().slice(0, 10);
