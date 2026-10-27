@@ -157,9 +157,10 @@ ci: pin pages actions to latest major versions
 - **Base path**: the site is served under `/personal-portfolio/`. Build internal links and asset URLs with `withBase()` from `src/utils/url.ts`, never as bare absolute paths.
 - **Styling**: use the CSS variables from `src/styles/global.css` (e.g. `var(--accent)`) instead of hardcoded colors, so both dark and light themes work.
 - **Sizing**: use `rem` for font sizes and spacing so the layout scales with the browser's font size setting. The root font size is the browser default (100%).
-- **Layout width**: content is 52rem wide. Pages that pass `wide` to `BaseLayout` (posts with a table of contents) grow to 72rem on screens ≥ 64em, the same breakpoint where the table of contents becomes a sidebar.
+- **Layout width**: every page, posts included, is 52rem wide and centered. On screens ≥ 85em a post's table of contents sits in the empty space left of the article (`PostLayout.astro` and `TableOfContents.astro` share that breakpoint); below it, the table of contents opens from a floating button.
 - **Floating buttons**: use the global `.fab` class for buttons fixed to the bottom-right corner, and stack them so they don't overlap (BackToTop at the bottom, the table of contents toggle above it).
 - **Font**: JetBrains Mono for all text.
+- **Motion**: `global.css` turns off every animation and transition for visitors who ask for reduced motion. Short transitions the visitor triggers on purpose (the table of contents drawer, the theme switch knob) opt out with the `data-keep-motion` attribute.
 - **Social previews**: every page has an `og:image`. Pages use `/og/site.png` by default; posts pass their own `/og/blog/<slug>.png` through `BaseLayout`'s `image` prop. The images are drawn by `src/utils/og.ts`, which copies the dark theme colors from `global.css` (CSS variables don't exist outside the browser), so change both together. The README chart (`src/utils/stats.ts`) reuses those colors.
 - **README chart**: `README.md` embeds `/stats/lines-added.svg` from the live site, which counts lines added per day with `git log --numstat` at build time (the day before the first commit is 0, and `package-lock.json` and binary files are skipped). It updates on every deploy, so never commit a static copy of it.
 

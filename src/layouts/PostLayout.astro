@@ -21,7 +21,6 @@ const hasToc = tocItems.length > 0;
 	title={post.data.title}
 	description={post.data.description}
 	image={`/og/blog/${post.id}.png`}
-	wide={hasToc}
 >
 	<ReadingProgress />
 	<article class:list={['post', { 'has-toc': hasToc }]}>
@@ -44,15 +43,24 @@ const hasToc = tocItems.length > 0;
 </BaseLayout>
 
 <style>
-	/* Article and table of contents side by side; on narrower screens the TOC opens from a floating button */
-	@media (min-width: 64em) {
+	/*
+	 * The article stays centered at the usual content width, and the table of contents sits in the empty space to its left.
+	 * 85em = 52rem content + 2 × (14rem TOC + 2.5rem gap), the narrowest screen where that space fits the TOC;
+	 * keep it in sync with TableOfContents.astro. On narrower screens the TOC opens from a floating button.
+	 */
+	@media (min-width: 85em) {
 		.post.has-toc {
+			--toc-width: 14rem;
+			--toc-gap: 2.5rem;
+
 			display: grid;
-			grid-template-columns: minmax(0, 1fr) 15rem;
+			grid-template-columns: var(--toc-width) minmax(0, 1fr);
 			grid-template-areas:
-				'header toc'
-				'body toc';
-			column-gap: 3.5rem;
+				'toc header'
+				'toc body';
+			column-gap: var(--toc-gap);
+			/* Hang the TOC column outside the container so the article column keeps its width and position */
+			margin-left: calc(-1 * (var(--toc-width) + var(--toc-gap)));
 		}
 
 		.post-header {

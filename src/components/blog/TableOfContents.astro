@@ -17,16 +17,22 @@ const { items } = Astro.props;
 		aria-controls="toc-panel"
 		aria-label="Table of contents"
 	>
-		<svg class="open-icon" viewBox="0 0 24 24" aria-hidden="true">
+		<svg viewBox="0 0 24 24" aria-hidden="true">
 			<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"></path>
-		</svg>
-		<svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
-			<path d="M18 6 6 18M6 6l12 12"></path>
 		</svg>
 	</button>
 
-	<nav id="toc-panel" class="panel" aria-labelledby="toc-title">
-		<p id="toc-title" class="title">Table of contents</p>
+	<div class="backdrop" aria-hidden="true" data-keep-motion></div>
+
+	<nav id="toc-panel" class="panel" aria-labelledby="toc-title" data-keep-motion>
+		<div class="panel-header">
+			<p id="toc-title" class="title">Table of contents</p>
+			<button class="toc-close" type="button" aria-label="Close table of contents">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path d="M18 6 6 18M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
 		<ol class="list" lang={SITE.postLang}>
 			{
 				items.map((heading) => (
@@ -42,27 +48,39 @@ const { items } = Astro.props;
 <script>
 	const toc = document.querySelector<HTMLElement>('.toc');
 	const toggle = toc?.querySelector<HTMLButtonElement>('.toc-toggle');
+	const close = toc?.querySelector<HTMLButtonElement>('.toc-close');
+	const backdrop = toc?.querySelector<HTMLElement>('.backdrop');
 	const links = [...(toc?.querySelectorAll<HTMLAnchorElement>('.list a') ?? [])];
 
-	if (toc && toggle) {
-		// Narrow screens: the toggle button opens and closes the panel
+	if (toc && toggle && close && backdrop) {
+		// Narrow screens: the toggle button slides the drawer in, and the page behind it stops scrolling
 		const setOpen = (open: boolean) => {
 			toc.classList.toggle('open', open);
 			toggle.setAttribute('aria-expanded', String(open));
+			document.documentElement.classList.toggle('toc-open', open);
 		};
 
-		toggle.addEventListener('click', () => setOpen(!toc.classList.contains('open')));
-		links.forEach((link) => link.addEventListener('click', () => setOpen(false)));
-
-		document.addEventListener('click', (event) => {
-			if (!toc.contains(event.target as Node)) setOpen(false);
+		toggle.addEventListener('click', () => {
+			setOpen(true);
+			close.focus();
 		});
+		close.addEventListener('click', () => {
+			setOpen(false);
+			toggle.focus();
+		});
+		backdrop.addEventListener('click', () => setOpen(false));
+		links.forEach((link) => link.addEventListener('click', () => setOpen(false)));
 
 		document.addEventListener('keydown', (event) => {
 			if (event.key === 'Escape' && toc.classList.contains('open')) {
 				setOpen(false);
 				toggle.focus();
 			}
+		});
+
+		// Widening the window past the breakpoint turns the drawer back into a sidebar, so release the page
+		matchMedia('(min-width: 85em)').addEventListener('change', (event) => {
+			if (event.matches) setOpen(false);
 		});
 
 		// Highlight the section being read: the last heading scrolled past the top of the viewport
@@ -102,8 +120,19 @@ const { items } = Astro.props;
 </script>
 
 <style>
-	.title {
+	.toc {
+		--drawer-transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.panel-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
 		margin-bottom: 0.75rem;
+	}
+
+	.title {
 		color: var(--heading);
 		font-size: var(--text-sm);
 		font-weight: 700;
@@ -140,42 +169,92 @@ const { items } = Astro.props;
 		color: var(--accent);
 	}
 
-	/* Narrow screens: floating button above BackToTop, opening the list in a panel */
+	/* Narrow screens: floating button above BackToTop, sliding the list in as a full-height drawer from the left */
 	.toc-toggle {
 		bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
 	}
 
-	.close-icon,
-	.toc.open .open-icon {
-		display: none;
+	.toc-close {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		width: 2rem;
+		height: 2rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background: none;
+		color: var(--text-muted);
+		cursor: pointer;
+		transition:
+			color var(--transition),
+			border-color var(--transition);
 	}
 
-	.toc.open .close-icon {
-		display: block;
+	.toc-close:hover {
+		color: var(--heading);
+		border-color: var(--accent);
+	}
+
+	.toc-close svg {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+
+	/* Visibility flips only after the slide finishes, so the closed drawer's links leave the tab order */
+	.backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 30;
+		background-color: color-mix(in srgb, var(--bg) 60%, transparent);
+		backdrop-filter: blur(3px);
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity var(--drawer-transition),
+			visibility 0s linear 0.35s;
 	}
 
 	.panel {
-		display: none;
 		position: fixed;
-		right: 1rem;
-		bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
-		z-index: 10;
-		width: min(20rem, calc(100vw - 2rem));
-		max-height: min(60vh, 28rem);
+		inset-block: 0;
+		left: 0;
+		z-index: 40;
+		width: min(20rem, 85vw);
 		overflow-y: auto;
-		padding: 1rem 1.25rem;
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
+		overscroll-behavior: contain;
+		padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+		border-right: 1px solid var(--border);
 		background-color: var(--surface);
 		box-shadow: var(--shadow);
+		transform: translateX(-100%);
+		visibility: hidden;
+		transition:
+			transform var(--drawer-transition),
+			visibility 0s linear 0.35s;
+	}
+
+	.toc.open .backdrop {
+		opacity: 1;
+		visibility: visible;
+		transition: opacity var(--drawer-transition);
 	}
 
 	.toc.open .panel {
-		display: block;
+		transform: none;
+		visibility: visible;
+		transition: transform var(--drawer-transition);
 	}
 
-	/* Wide screens: sticky sidebar next to the article */
-	@media (min-width: 64em) {
+	:global(html.toc-open) {
+		overflow: hidden;
+	}
+
+	/* Wide screens: sticky sidebar left of the article (same breakpoint as PostLayout.astro) */
+	@media (min-width: 85em) {
 		.toc {
 			position: sticky;
 			top: 5.5rem;
@@ -183,21 +262,24 @@ const { items } = Astro.props;
 			overflow-y: auto;
 		}
 
-		.toc-toggle {
+		.toc-toggle,
+		.toc-close,
+		.backdrop {
 			display: none;
 		}
 
 		.panel,
 		.toc.open .panel {
-			display: block;
 			position: static;
 			width: auto;
-			max-height: none;
 			overflow: visible;
 			padding: 0;
 			border: none;
 			background: none;
 			box-shadow: none;
+			transform: none;
+			visibility: visible;
+			transition: none;
 		}
 	}
 </style>

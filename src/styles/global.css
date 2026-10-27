@@ -29,7 +29,6 @@
 
 	--radius: 0.5rem;
 	--content-width: 52rem;
-	--wide-width: 72rem;
 	--transition: 0.2s ease;
 }
 
@@ -129,13 +128,6 @@ ol {
 	}
 }
 
-/* Pages with a sidebar (posts with a table of contents) widen every container so edges stay aligned */
-@media (min-width: 64em) {
-	.wide .container {
-		max-width: var(--wide-width);
-	}
-}
-
 /* Floating action buttons in the bottom-right corner (BackToTop, table of contents toggle) */
 .fab {
 	position: fixed;
@@ -192,8 +184,9 @@ ol {
 	border: 0;
 }
 
+/* Reduced motion turns animations off, except short ones the visitor triggers on purpose, marked [data-keep-motion] */
 @media (prefers-reduced-motion: reduce) {
-	*,
+	*:not([data-keep-motion]),
 	*::before,
 	*::after {
 		animation: none !important;
