@@ -39,3 +39,5 @@ tags: [kubernetes, architecture]
 
 ### container runtime
 <mark>container runtime</mark> là thành phần chịu trách nhiệm chạy và quản lý vòng đời container trong Kubernetes.
+
+## Kubernetes Add-ons Components
