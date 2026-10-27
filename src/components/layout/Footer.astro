@@ -1,18 +1,18 @@
 ---
 import { SITE } from '../../config';
 
-// Build date as DD/MM/YY in Vietnam time (CI runners use UTC)
-const buildDate = new Intl.DateTimeFormat('en-GB', {
+// Launch date as DD/MM/YYYY; parsed as UTC midnight, so format it in UTC too
+const launchDate = new Intl.DateTimeFormat('en-GB', {
 	day: '2-digit',
 	month: '2-digit',
-	year: '2-digit',
-	timeZone: 'Asia/Ho_Chi_Minh',
-}).format(new Date());
+	year: 'numeric',
+	timeZone: 'UTC',
+}).format(new Date(SITE.launchDate));
 ---
 
 <footer class="site-footer">
 	<div class="container footer">
-		<p>© {buildDate} {SITE.initials}</p>
+		<p>From <time datetime={SITE.launchDate}>{launchDate}</time> {SITE.initials}</p>
 		<p>
 			Built with <a href="https://astro.build">Astro</a> · <a href={SITE.repo}>source</a>
 		</p>
