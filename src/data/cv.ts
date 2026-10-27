@@ -7,6 +7,7 @@ export interface Profile {
 	birthYear: number;
 	location: string;
 	github: string;
+	linkedin: string;
 	about: string[];
 }
 
@@ -37,6 +38,7 @@ export const PROFILE: Profile = {
 	birthYear: 2002,
 	location: 'Hanoi, Vietnam',
 	github: 'https://github.com/thanhbl-hust',
+	linkedin: 'https://www.linkedin.com/in/thanh-bl/',
 	about: [
 		'DevOps Engineer who enjoys turning manual, error-prone processes into reliable, automated pipelines. I work across cloud infrastructure, containers, and CI/CD, with a focus on making systems observable and easy to operate.',
 		'This site is where I keep my CV and write down what I learn along the way.',
