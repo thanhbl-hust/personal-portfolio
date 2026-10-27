@@ -102,16 +102,21 @@ ci: pin pages actions to latest major versions
 │   │   └── PostLayout.astro      # Blog post: reading progress bar, header, content, and table of contents sidebar
 │   ├── pages/                    # File-based routes
 │   │   ├── index.astro           # CV page (/)
-│   │   └── blog/
-│   │       ├── index.astro       # Post list with search and tags (/blog/)
-│   │       ├── [...slug].astro   # Single post (/blog/<slug>/)
-│   │       └── tags/
-│   │           └── [tag].astro   # Posts with a given tag (/blog/tags/<tag>/)
+│   │   ├── blog/
+│   │   │   ├── index.astro       # Post list with search and tags (/blog/)
+│   │   │   ├── [...slug].astro   # Single post (/blog/<slug>/)
+│   │   │   └── tags/
+│   │   │       └── [tag].astro   # Posts with a given tag (/blog/tags/<tag>/)
+│   │   └── og/                   # Social preview images (og:image), rendered to PNG at build time
+│   │       ├── site.png.ts       # Default image for every page (/og/site.png)
+│   │       └── blog/
+│   │           └── [slug].png.ts # One image per post (/og/blog/<slug>.png)
 │   ├── plugins/
 │   │   └── markdown-callouts.mjs # Sätteri plugin for > [!NOTE] style callouts
 │   ├── styles/
 │   │   └── global.css            # Design tokens (colors, fonts, sizes), reset, utilities
 │   ├── utils/
+│   │   ├── og.ts                 # renderOgImage(): terminal-style social preview cards (Satori + sharp)
 │   │   ├── posts.ts              # Blog helpers: getPosts, getTags, getTocItems, post/tag URLs, reading time, dates
 │   │   ├── text.ts               # foldText() for accent-insensitive matching and slugs
 │   │   └── url.ts                # withBase() for base-path-aware links
@@ -134,7 +139,7 @@ ci: pin pages actions to latest major versions
 | `src/content/blog/`        | Blog posts. Each post is a folder named after its URL slug, containing `index.md` and an `images/` folder.                                    |
 | `src/data/`                | Content as typed data. Edit `cv.ts` to change what the CV page shows — no markup changes needed.                                              |
 | `src/layouts/`             | Page shells. `BaseLayout` holds `<head>` metadata, fonts, theme script, nav, and footer; `PostLayout` wraps it for blog posts.               |
-| `src/pages/`               | Routes. Each `.astro` file becomes a page at the matching URL; `[param]` files generate one page per post or tag.                             |
+| `src/pages/`               | Routes. Each `.astro` file becomes a page at the matching URL; `[param]` files generate one page per post or tag. `og/*.png.ts` endpoints generate the social preview images. |
 | `src/plugins/`             | Markdown processor plugins, written against the Sätteri plugin API.                                                                           |
 | `src/styles/`              | Global CSS only. Component-specific styles live in each component's `<style>` block.                                                         |
 | `src/utils/`               | Plain TypeScript helpers with no markup.                                                                                                      |
@@ -151,6 +156,7 @@ ci: pin pages actions to latest major versions
 - **Layout width**: content is 52rem wide. Pages that pass `wide` to `BaseLayout` (posts with a table of contents) grow to 72rem on screens ≥ 64em, the same breakpoint where the table of contents becomes a sidebar.
 - **Floating buttons**: use the global `.fab` class for buttons fixed to the bottom-right corner, and stack them so they don't overlap (BackToTop at the bottom, the table of contents toggle above it).
 - **Font**: JetBrains Mono for all text.
+- **Social previews**: every page has an `og:image`. Pages use `/og/site.png` by default; posts pass their own `/og/blog/<slug>.png` through `BaseLayout`'s `image` prop. The images are drawn by `src/utils/og.ts`, which copies the dark theme colors from `global.css` (CSS variables don't exist outside the browser), so change both together.
 
 ## Writing Blog Posts
 

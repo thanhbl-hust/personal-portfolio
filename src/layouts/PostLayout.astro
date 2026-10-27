@@ -17,7 +17,12 @@ const tocItems = getTocItems(headings);
 const hasToc = tocItems.length > 0;
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} wide={hasToc}>
+<BaseLayout
+	title={post.data.title}
+	description={post.data.description}
+	image={`/og/blog/${post.id}.png`}
+	wide={hasToc}
+>
 	<ReadingProgress />
 	<article class:list={['post', { 'has-toc': hasToc }]}>
 		<div class="post-header">
