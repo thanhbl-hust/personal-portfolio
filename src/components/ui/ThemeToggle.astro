@@ -1,0 +1,64 @@
+<button class="theme-toggle" type="button" aria-label="Toggle color theme">
+	<svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true">
+		<circle cx="12" cy="12" r="4"></circle>
+		<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+		></path>
+	</svg>
+	<svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true">
+		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+	</svg>
+</button>
+
+<script>
+	const root = document.documentElement;
+
+	document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+		const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+		root.dataset.theme = next;
+		try {
+			localStorage.setItem('theme', next);
+		} catch {}
+	});
+</script>
+
+<style>
+	.theme-toggle {
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background-color: var(--surface);
+		color: var(--text-muted);
+		cursor: pointer;
+		transition:
+			color var(--transition),
+			border-color var(--transition);
+	}
+
+	.theme-toggle:hover {
+		color: var(--heading);
+		border-color: var(--accent);
+	}
+
+	.icon {
+		width: 1rem;
+		height: 1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	/* Show the icon of the theme you would switch to */
+	.moon,
+	:global([data-theme='light']) .sun {
+		display: none;
+	}
+
+	:global([data-theme='light']) .moon {
+		display: block;
+	}
+</style>

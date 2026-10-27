@@ -1,0 +1,112 @@
+---
+import { NAV_LINKS, SITE } from '../../config';
+import { withBase } from '../../utils/url';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+
+const isActive = (href: string) => {
+	const target = withBase(href).replace(/\/$/, '');
+	return href === '/' ? currentPath === target : currentPath.startsWith(target);
+};
+---
+
+<header class="site-header">
+	<nav class="container nav" aria-label="Main">
+		<a class="brand" href={withBase('/')}>
+			<span class="user">{SITE.terminalUser}</span><span class="at">@</span><span class="host">devops</span><span
+				class="path">:~$</span
+			>
+		</a>
+		<div class="actions">
+			<ul class="links">
+				{
+					NAV_LINKS.map((link) => (
+						<li>
+							<a href={withBase(link.href)} aria-current={isActive(link.href) ? 'page' : undefined}>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<ThemeToggle />
+		</div>
+	</nav>
+</header>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background-color: color-mix(in srgb, var(--bg) 85%, transparent);
+		backdrop-filter: blur(8px);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		min-height: 3.5rem;
+	}
+
+	.brand {
+		font-weight: 700;
+		white-space: nowrap;
+	}
+
+	.brand:hover {
+		text-decoration: none;
+	}
+
+	.user {
+		color: var(--green);
+	}
+
+	.at {
+		color: var(--text-muted);
+	}
+
+	.host {
+		color: var(--accent);
+	}
+
+	.path {
+		color: var(--text-muted);
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.links {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.links a {
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+		transition: color var(--transition);
+	}
+
+	.links a::before {
+		content: './';
+		opacity: 0.6;
+	}
+
+	.links a:hover,
+	.links a[aria-current='page'] {
+		color: var(--heading);
+		text-decoration: none;
+	}
+
+	.links a[aria-current='page'] {
+		box-shadow: 0 2px 0 var(--accent);
+	}
+</style>

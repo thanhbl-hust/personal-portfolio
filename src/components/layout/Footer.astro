@@ -1,0 +1,36 @@
+---
+import { SITE } from '../../config';
+
+// Build date as DD/MM/YY in Vietnam time (CI runners use UTC)
+const buildDate = new Intl.DateTimeFormat('en-GB', {
+	day: '2-digit',
+	month: '2-digit',
+	year: '2-digit',
+	timeZone: 'Asia/Ho_Chi_Minh',
+}).format(new Date());
+---
+
+<footer class="site-footer">
+	<div class="container footer">
+		<p>© {buildDate} {SITE.initials}</p>
+		<p>
+			Built with <a href="https://astro.build">Astro</a> · <a href={SITE.repo}>source</a>
+		</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--border);
+	}
+
+	.footer {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.5rem 1.5rem;
+		padding-block: 1.5rem;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+</style>
