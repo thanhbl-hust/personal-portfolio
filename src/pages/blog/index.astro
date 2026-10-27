@@ -1,10 +1,33 @@
 ---
+import PostList from '../../components/blog/PostList.astro';
+import PostSearch from '../../components/blog/PostSearch.astro';
 import Section from '../../components/sections/Section.astro';
+import TagList from '../../components/ui/TagList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts, getTags, tagHref } from '../../utils/posts';
+
+const posts = await getPosts();
+const tags = getTags(posts).map((tag) => ({ label: `#${tag.label} (${tag.count})`, href: tagHref(tag.label) }));
 ---
 
 <BaseLayout title="Blog" description="Technical notes on DevOps, cloud, and infrastructure.">
 	<Section id="blog" title="blog" level={1}>
-		<p class="muted">No posts yet.</p>
+		<p class="muted">Notes on what I learn as a DevOps Engineer.</p>
+
+		<div class="filters">
+			<PostSearch />
+			{tags.length > 0 && <TagList items={tags} />}
+		</div>
+
+		<PostList posts={posts} />
 	</Section>
 </BaseLayout>
+
+<style>
+	.filters {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin-block: 1.5rem 2rem;
+	}
+</style>

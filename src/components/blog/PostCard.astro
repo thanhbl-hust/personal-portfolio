@@ -1,0 +1,64 @@
+---
+import { SITE } from '../../config';
+import { type Post, postHref, tagHref } from '../../utils/posts';
+import { foldText } from '../../utils/text';
+import TagList from '../ui/TagList.astro';
+import PostMeta from './PostMeta.astro';
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, tags } = post.data;
+// Folded (no diacritics) so the search box matches with or without Vietnamese accents
+const searchText = foldText([title, description, ...tags].join(' '));
+---
+
+<li class="post" data-search={searchText}>
+	<PostMeta post={post} />
+	<h2 class="title" lang={SITE.postLang}><a href={postHref(post)}>{title}</a></h2>
+	<p class="description" lang={SITE.postLang}>{description}</p>
+	{
+		tags.length > 0 && (
+			<div class="tags">
+				<TagList items={tags.map((tag) => ({ label: `#${tag}`, href: tagHref(tag) }))} />
+			</div>
+		)
+	}
+</li>
+
+<style>
+	.post {
+		padding-block: 1.5rem;
+		border-bottom: 1px dashed var(--border);
+	}
+
+	.post:first-child {
+		padding-top: 0;
+	}
+
+	.title {
+		margin-top: 0.25rem;
+		font-size: var(--text-lg);
+	}
+
+	.title a {
+		color: var(--heading);
+		transition: color var(--transition);
+	}
+
+	.title a:hover {
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.description {
+		margin-top: 0.35rem;
+		color: var(--text-muted);
+	}
+
+	.tags {
+		margin-top: 0.75rem;
+	}
+</style>

@@ -1,0 +1,47 @@
+---
+import { formatDate, type Post, readingTime } from '../../utils/posts';
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+const { pubDate, updatedDate, draft } = post.data;
+---
+
+<p class="meta">
+	<time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+	{
+		updatedDate && (
+			<span>
+				· updated <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time>
+			</span>
+		)
+	}
+	<span>· {readingTime(post.body)} min read</span>
+	{draft && <span class="draft">draft</span>}
+</p>
+
+<style>
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0 0.5ch;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+
+	time {
+		color: var(--yellow);
+	}
+
+	.draft {
+		margin-left: 0.5ch;
+		padding: 0 0.5rem;
+		border: 1px solid var(--red);
+		border-radius: 999px;
+		color: var(--red);
+		font-size: var(--text-xs);
+	}
+</style>

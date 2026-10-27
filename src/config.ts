@@ -3,6 +3,8 @@ export const SITE = {
 	initials: 'LTB',
 	description: 'DevOps Engineer — CV and technical notes.',
 	terminalUser: 'thanhbl',
+	// Blog posts are written in Vietnamese; the rest of the site's text is English
+	postLang: 'vi',
 	repo: 'https://github.com/thanhbl-hust/personal-portfolio',
 } as const;
 

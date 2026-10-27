@@ -1,0 +1,37 @@
+---
+import PostList from '../../../components/blog/PostList.astro';
+import Section from '../../../components/sections/Section.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getPosts, getTags, type Post, type TagSummary, tagSlug } from '../../../utils/posts';
+import { withBase } from '../../../utils/url';
+
+export async function getStaticPaths() {
+	const posts = await getPosts();
+	return getTags(posts).map((tag) => ({
+		params: { tag: tag.slug },
+		props: { tag, posts: posts.filter((post) => post.data.tags.some((label) => tagSlug(label) === tag.slug)) },
+	}));
+}
+
+interface Props {
+	tag: TagSummary;
+	posts: Post[];
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`#${tag.label}`} description={`Posts tagged ${tag.label}.`}>
+	<Section id="tag" title={`tag: ${tag.label}`} level={1}>
+		<p class="summary muted">
+			{tag.count} post{tag.count === 1 ? '' : 's'} · <a href={withBase('/blog/')}>all posts</a>
+		</p>
+		<PostList posts={posts} />
+	</Section>
+</BaseLayout>
+
+<style>
+	.summary {
+		margin-bottom: 2rem;
+	}
+</style>

@@ -134,6 +134,10 @@ ol {
 }
 
 /* Utilities */
+[hidden] {
+	display: none !important;
+}
+
 .muted {
 	color: var(--text-muted);
 }

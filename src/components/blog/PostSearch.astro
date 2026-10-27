@@ -1,0 +1,99 @@
+<div class="search">
+	<label class="sr-only" for="post-search">Search posts</label>
+	<span class="prompt" aria-hidden="true">$ grep</span>
+	<input id="post-search" type="search" placeholder="title, description, or tag" autocomplete="off" />
+	<kbd class="hint" aria-hidden="true">/</kbd>
+</div>
+
+<script>
+	import { foldText } from '../../utils/text';
+
+	// Filters the post list on the same page by matching every search term against [data-search]
+	const input = document.querySelector<HTMLInputElement>('#post-search');
+	const posts = document.querySelectorAll<HTMLElement>('[data-post-list] [data-search]');
+	const empty = document.querySelector<HTMLElement>('[data-search-empty]');
+
+	if (input) {
+		input.addEventListener('input', () => {
+			const terms = foldText(input.value).split(/\s+/).filter(Boolean);
+			let visible = 0;
+
+			posts.forEach((post) => {
+				const match = terms.every((term) => post.dataset.search?.includes(term));
+				post.hidden = !match;
+				if (match) visible += 1;
+			});
+
+			if (empty) empty.hidden = visible > 0;
+		});
+
+		document.addEventListener('keydown', (event) => {
+			const target = event.target as HTMLElement;
+			const isTyping = target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+
+			if (event.key === '/' && !isTyping) {
+				event.preventDefault();
+				input.focus();
+			} else if (event.key === 'Escape' && target === input) {
+				input.value = '';
+				input.dispatchEvent(new Event('input'));
+				input.blur();
+			}
+		});
+	}
+</script>
+
+<style>
+	.search {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.6rem 0.9rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background-color: var(--surface);
+		transition: border-color var(--transition);
+	}
+
+	.search:focus-within {
+		border-color: var(--accent);
+	}
+
+	.prompt {
+		color: var(--green);
+		font-size: var(--text-sm);
+		white-space: nowrap;
+	}
+
+	input {
+		flex: 1;
+		min-width: 0;
+		border: none;
+		outline: none;
+		background: transparent;
+		color: var(--heading);
+		font: inherit;
+		font-size: var(--text-sm);
+	}
+
+	input::placeholder {
+		color: var(--text-muted);
+		opacity: 0.8;
+	}
+
+	.hint {
+		display: none;
+		padding: 0 0.45rem;
+		border: 1px solid var(--border);
+		border-radius: 0.25rem;
+		color: var(--text-muted);
+		font-family: inherit;
+		font-size: var(--text-xs);
+	}
+
+	@media (hover: hover) {
+		.hint {
+			display: inline-block;
+		}
+	}
+</style>
