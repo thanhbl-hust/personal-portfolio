@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="200" viewBox="0 0 720 200" font-family="JetBrains Mono, Consolas, monospace">
+  <rect width="720" height="200" rx="12" fill="#1a1b26"/>
+  <g text-anchor="middle">
+    <rect x="40" y="60" width="170" height="80" rx="8" fill="#24283b" stroke="#7aa2f7" stroke-width="2"/>
+    <text x="125" y="96" fill="#c0caf5" font-size="16">index.md</text>
+    <text x="125" y="120" fill="#9aa5ce" font-size="12">+ images/</text>
+
+    <rect x="275" y="60" width="170" height="80" rx="8" fill="#24283b" stroke="#bb9af7" stroke-width="2"/>
+    <text x="360" y="96" fill="#c0caf5" font-size="16">astro build</text>
+    <text x="360" y="120" fill="#9aa5ce" font-size="12">npm run build</text>
+
+    <rect x="510" y="60" width="170" height="80" rx="8" fill="#24283b" stroke="#9ece6a" stroke-width="2"/>
+    <text x="595" y="96" fill="#c0caf5" font-size="16">HTML page</text>
+    <text x="595" y="120" fill="#9aa5ce" font-size="12">/blog/&lt;slug&gt;/</text>
+  </g>
+  <g stroke="#9ece6a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M220 100h44M256 92l8 8-8 8"/>
+    <path d="M455 100h44M491 92l8 8-8 8"/>
+  </g>
+</svg>
