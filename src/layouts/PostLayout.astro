@@ -1,0 +1,63 @@
+---
+import PostHeader from '../components/blog/PostHeader.astro';
+import Prose from '../components/blog/Prose.astro';
+import TableOfContents from '../components/blog/TableOfContents.astro';
+import { SITE } from '../config';
+import { getTocItems, type Heading, type Post } from '../utils/posts';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+	post: Post;
+	headings: Heading[];
+}
+
+const { post, headings } = Astro.props;
+const tocItems = getTocItems(headings);
+const hasToc = tocItems.length > 0;
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} wide={hasToc}>
+	<article class:list={['post', { 'has-toc': hasToc }]}>
+		<div class="post-header">
+			<PostHeader post={post} />
+		</div>
+		{
+			hasToc && (
+				<div class="post-toc">
+					<TableOfContents items={tocItems} />
+				</div>
+			)
+		}
+		<div class="post-body" lang={SITE.postLang}>
+			<Prose>
+				<slot />
+			</Prose>
+		</div>
+	</article>
+</BaseLayout>
+
+<style>
+	/* Article and table of contents side by side; on narrower screens the TOC opens from a floating button */
+	@media (min-width: 64em) {
+		.post.has-toc {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 15rem;
+			grid-template-areas:
+				'header toc'
+				'body toc';
+			column-gap: 3.5rem;
+		}
+
+		.post-header {
+			grid-area: header;
+		}
+
+		.post-toc {
+			grid-area: toc;
+		}
+
+		.post-body {
+			grid-area: body;
+		}
+	}
+</style>

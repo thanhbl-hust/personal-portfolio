@@ -1,0 +1,71 @@
+---
+import { SITE } from '../../config';
+import { type Post, tagHref } from '../../utils/posts';
+import { withBase } from '../../utils/url';
+import TagList from '../ui/TagList.astro';
+import PostMeta from './PostMeta.astro';
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, tags } = post.data;
+---
+
+<header class="header">
+	<a class="back" href={withBase('/blog/')}>← cd ../blog</a>
+	<h1 class="title" lang={SITE.postLang}><span class="hash" aria-hidden="true">#</span> {title}</h1>
+	<PostMeta post={post} />
+	<p class="description" lang={SITE.postLang}>{description}</p>
+	{
+		tags.length > 0 && (
+			<div class="tags">
+				<TagList items={tags.map((tag) => ({ label: `#${tag}`, href: tagHref(tag) }))} />
+			</div>
+		)
+	}
+</header>
+
+<style>
+	.header {
+		margin-bottom: 2rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.back {
+		display: inline-block;
+		margin-bottom: 1.25rem;
+		color: var(--text-muted);
+		font-size: var(--text-sm);
+	}
+
+	.back:hover {
+		color: var(--accent);
+	}
+
+	.title {
+		margin-bottom: 0.5rem;
+		font-size: var(--text-2xl);
+	}
+
+	.hash {
+		color: var(--accent);
+	}
+
+	.description {
+		margin-top: 0.75rem;
+		color: var(--text-muted);
+	}
+
+	.tags {
+		margin-top: 1rem;
+	}
+
+	@media (min-width: 40em) {
+		.title {
+			font-size: var(--text-3xl);
+		}
+	}
+</style>

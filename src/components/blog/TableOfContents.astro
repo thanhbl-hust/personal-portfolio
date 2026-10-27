@@ -1,0 +1,203 @@
+---
+import { SITE } from '../../config';
+import type { Heading } from '../../utils/posts';
+
+interface Props {
+	items: Heading[];
+}
+
+const { items } = Astro.props;
+---
+
+<aside class="toc">
+	<button
+		class="toc-toggle fab"
+		type="button"
+		aria-expanded="false"
+		aria-controls="toc-panel"
+		aria-label="Table of contents"
+	>
+		<svg class="open-icon" viewBox="0 0 24 24" aria-hidden="true">
+			<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"></path>
+		</svg>
+		<svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+			<path d="M18 6 6 18M6 6l12 12"></path>
+		</svg>
+	</button>
+
+	<nav id="toc-panel" class="panel" aria-labelledby="toc-title">
+		<p id="toc-title" class="title">Table of contents</p>
+		<ol class="list" lang={SITE.postLang}>
+			{
+				items.map((heading) => (
+					<li class:list={['item', { sub: heading.depth === 3 }]}>
+						<a href={`#${heading.slug}`}>{heading.text}</a>
+					</li>
+				))
+			}
+		</ol>
+	</nav>
+</aside>
+
+<script>
+	const toc = document.querySelector<HTMLElement>('.toc');
+	const toggle = toc?.querySelector<HTMLButtonElement>('.toc-toggle');
+	const links = [...(toc?.querySelectorAll<HTMLAnchorElement>('.list a') ?? [])];
+
+	if (toc && toggle) {
+		// Narrow screens: the toggle button opens and closes the panel
+		const setOpen = (open: boolean) => {
+			toc.classList.toggle('open', open);
+			toggle.setAttribute('aria-expanded', String(open));
+		};
+
+		toggle.addEventListener('click', () => setOpen(!toc.classList.contains('open')));
+		links.forEach((link) => link.addEventListener('click', () => setOpen(false)));
+
+		document.addEventListener('click', (event) => {
+			if (!toc.contains(event.target as Node)) setOpen(false);
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && toc.classList.contains('open')) {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
+
+		// Highlight the section being read: the last heading scrolled past the top of the viewport
+		const ACTIVE_OFFSET_PX = 120;
+		const targetId = (link: HTMLAnchorElement) => decodeURIComponent(link.hash.slice(1));
+		const headings = links
+			.map((link) => document.getElementById(targetId(link)))
+			.filter((heading): heading is HTMLElement => heading !== null);
+
+		let frame = 0;
+
+		const updateActive = () => {
+			frame = 0;
+			let current: HTMLElement | undefined;
+
+			for (const heading of headings) {
+				if (heading.getBoundingClientRect().top > ACTIVE_OFFSET_PX) break;
+				current = heading;
+			}
+
+			// Short final sections may never reach the top, so the page bottom activates the last one
+			const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+			if (atBottom && headings.length > 0) current = headings[headings.length - 1];
+
+			links.forEach((link) => link.classList.toggle('active', targetId(link) === current?.id));
+		};
+
+		window.addEventListener(
+			'scroll',
+			() => {
+				if (!frame) frame = requestAnimationFrame(updateActive);
+			},
+			{ passive: true },
+		);
+		updateActive();
+	}
+</script>
+
+<style>
+	.title {
+		margin-bottom: 0.75rem;
+		color: var(--heading);
+		font-size: var(--text-sm);
+		font-weight: 700;
+	}
+
+	.list {
+		border-left: 1px solid var(--border);
+		font-size: var(--text-sm);
+	}
+
+	.item a {
+		display: block;
+		margin-left: -1px;
+		padding: 0.25rem 0 0.25rem 0.85rem;
+		border-left: 2px solid transparent;
+		color: var(--text-muted);
+		line-height: 1.5;
+		transition:
+			color var(--transition),
+			border-color var(--transition);
+	}
+
+	.item.sub a {
+		padding-left: 1.75rem;
+	}
+
+	.item a:hover {
+		color: var(--heading);
+		text-decoration: none;
+	}
+
+	.item a.active {
+		border-left-color: var(--accent);
+		color: var(--accent);
+	}
+
+	/* Narrow screens: floating button above BackToTop, opening the list in a panel */
+	.toc-toggle {
+		bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+	}
+
+	.close-icon,
+	.toc.open .open-icon {
+		display: none;
+	}
+
+	.toc.open .close-icon {
+		display: block;
+	}
+
+	.panel {
+		display: none;
+		position: fixed;
+		right: 1rem;
+		bottom: calc(8rem + env(safe-area-inset-bottom, 0px));
+		z-index: 10;
+		width: min(20rem, calc(100vw - 2rem));
+		max-height: min(60vh, 28rem);
+		overflow-y: auto;
+		padding: 1rem 1.25rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background-color: var(--surface);
+		box-shadow: var(--shadow);
+	}
+
+	.toc.open .panel {
+		display: block;
+	}
+
+	/* Wide screens: sticky sidebar next to the article */
+	@media (min-width: 64em) {
+		.toc {
+			position: sticky;
+			top: 5.5rem;
+			max-height: calc(100vh - 7rem);
+			overflow-y: auto;
+		}
+
+		.toc-toggle {
+			display: none;
+		}
+
+		.panel,
+		.toc.open .panel {
+			display: block;
+			position: static;
+			width: auto;
+			max-height: none;
+			overflow: visible;
+			padding: 0;
+			border: none;
+			background: none;
+			box-shadow: none;
+		}
+	}
+</style>

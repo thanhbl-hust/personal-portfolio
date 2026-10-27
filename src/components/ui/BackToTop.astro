@@ -1,5 +1,5 @@
-<button class="back-to-top" type="button" aria-label="Back to top">
-	<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+<button class="back-to-top fab" type="button" aria-label="Back to top">
+	<svg viewBox="0 0 24 24" aria-hidden="true">
 		<path d="M12 19V5M5 12l7-7 7 7"></path>
 	</svg>
 </button>
@@ -22,20 +22,7 @@
 
 <style>
 	.back-to-top {
-		position: fixed;
-		right: 1rem;
 		bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-		z-index: 10;
-		display: grid;
-		place-items: center;
-		width: 2.75rem;
-		height: 2.75rem;
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
-		background-color: var(--surface);
-		box-shadow: var(--shadow);
-		color: var(--text-muted);
-		cursor: pointer;
 		/* Hidden until the page is scrolled; visibility also removes it from the tab order */
 		opacity: 0;
 		visibility: hidden;
@@ -52,20 +39,5 @@
 		opacity: 1;
 		visibility: visible;
 		transform: translateY(0);
-	}
-
-	.back-to-top:hover {
-		color: var(--heading);
-		border-color: var(--accent);
-	}
-
-	.icon {
-		width: 1.25rem;
-		height: 1.25rem;
-		fill: none;
-		stroke: currentColor;
-		stroke-width: 2;
-		stroke-linecap: round;
-		stroke-linejoin: round;
 	}
 </style>

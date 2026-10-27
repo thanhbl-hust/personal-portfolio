@@ -34,10 +34,15 @@ const buildDate = new Intl.DateTimeFormat('en-GB', {
 		font-size: var(--text-sm);
 	}
 
-	/* Below this width the fixed back-to-top button would cover the footer's right side */
+	/* Below this width the floating buttons would cover the footer's right side */
 	@media (max-width: 66em) {
 		.footer {
 			padding-bottom: 4.5rem;
+		}
+
+		/* Post pages stack the table of contents button above BackToTop */
+		:global(body:has(.toc-toggle)) .footer {
+			padding-bottom: 8rem;
 		}
 	}
 </style>

@@ -29,6 +29,7 @@
 
 	--radius: 0.5rem;
 	--content-width: 52rem;
+	--wide-width: 72rem;
 	--transition: 0.2s ease;
 }
 
@@ -131,6 +132,48 @@ ol {
 	.container {
 		padding-inline: 1.5rem;
 	}
+}
+
+/* Pages with a sidebar (posts with a table of contents) widen every container so edges stay aligned */
+@media (min-width: 64em) {
+	.wide .container {
+		max-width: var(--wide-width);
+	}
+}
+
+/* Floating action buttons in the bottom-right corner (BackToTop, table of contents toggle) */
+.fab {
+	position: fixed;
+	right: 1rem;
+	z-index: 10;
+	display: grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background-color: var(--surface);
+	box-shadow: var(--shadow);
+	color: var(--text-muted);
+	cursor: pointer;
+	transition:
+		color var(--transition),
+		border-color var(--transition);
+}
+
+.fab:hover {
+	color: var(--heading);
+	border-color: var(--accent);
+}
+
+.fab svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 }
 
 /* Utilities */
