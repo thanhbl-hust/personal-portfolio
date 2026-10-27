@@ -33,4 +33,11 @@ const buildDate = new Intl.DateTimeFormat('en-GB', {
 		color: var(--text-muted);
 		font-size: var(--text-sm);
 	}
+
+	/* Below this width the fixed back-to-top button would cover the footer's right side */
+	@media (max-width: 66em) {
+		.footer {
+			padding-bottom: 4.5rem;
+		}
+	}
 </style>
