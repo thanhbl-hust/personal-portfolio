@@ -15,7 +15,7 @@ const { title, description, tags } = post.data;
 const searchText = foldText([title, description, ...tags].join(' '));
 ---
 
-<li class="post" data-search={searchText}>
+<li class="post" data-search={searchText} data-post-id={post.id}>
 	<PostMeta post={post} />
 	<h2 class="title" lang={SITE.postLang}><a href={postHref(post)}>{title}</a></h2>
 	<p class="description" lang={SITE.postLang}>{description}</p>
