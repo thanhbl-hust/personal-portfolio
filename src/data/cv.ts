@@ -40,16 +40,21 @@ export const PROFILE: Profile = {
 	github: 'https://github.com/thanhbl-hust',
 	linkedin: 'https://www.linkedin.com/in/thanh-bl/',
 	about: [
-		'DevOps Engineer who enjoys turning manual, error-prone processes into reliable, automated pipelines. I work across cloud infrastructure, containers, and CI/CD, with a focus on making systems observable and easy to operate.',
+		'DevOps/Cloud Engineer with 3+ years running production infrastructure on AWS, from backend services for Samsung Internet at Samsung R&D Vietnam to a Kubernetes platform for a fintech/EV-charging product, designed end-to-end from client requirements. Builds everything as code with Terraform, operates EKS with Karpenter and GitOps (Argo CD), and owns the security and compliance layer: secrets management with Vault and SOC 2 controls through Vanta. Focused on infrastructure that is reliable, cost-efficient, and audit-ready.',
 		'This site is where I keep my CV and write down what I learn along the way.',
 	],
 };
 
 export const EDUCATION: Education[] = [
 	{
-		period: '2018 – 2023',
+		period: '03/2024 – 06/2024',
+		school: 'Samsung Talent Program (STP)',
+		degree: 'Scholarship',
+	},
+	{
+		period: '2020 – 2024',
 		school: 'Hanoi University of Science and Technology (HUST)',
-		degree: "Engineer's Degree in Computer Science",
+		degree: "Bachelor's Degree in Computer Science",
 		details: ['CPA: 3.16 / 4.0'],
 	},
 ];
