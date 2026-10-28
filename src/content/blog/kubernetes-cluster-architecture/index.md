@@ -1,6 +1,6 @@
 ---
 title: Kiến trúc của một Kubernetes Cluster
-description: Control plane và các worker node phối hợp với nhau như thế nào trong một Kubernetes cluster.
+description: Control Plane và các Worker Node phối hợp với nhau như thế nào trong một Kubernetes cluster.
 pubDate: 2026-10-27
 tags: [kubernetes, architecture]
 ---
@@ -10,8 +10,9 @@ tags: [kubernetes, architecture]
 
 ## Control Plane
 
-### api-server
+**Control Plane** chịu trách nhiệm cho việc điều phối container và quản lý toàn bộ trạng thái của cụm Kubernetes. Sau đây là các thành phần chính của Control Plane.
 
+### api-server
 
 <mark>api-server</mark> là cổng giao tiếp duy nhất của cụm Kubernetes, thành phần duy nhất đọc / ghi trạng thái vào **etcd**. 
 
@@ -29,13 +30,15 @@ tags: [kubernetes, architecture]
 
 ## Worker Node
 
+**Worker Node** là nơi chịu trách nhiệm chạy các application đã được container hóa. Dưới đây là các thành phần chính của các Worker Node.
+
 ### kubelet
 
 <mark>kubelet</mark> hoạt động như một agent trên tất cả các Node, chạy dưới dạng **systemd**. 
 
 ### kube-proxy
 
-<mark>kube-proxy</mark> là một component chạy trên tất cả các Node, biến khái niệm <mark>Service</mark> thành các rule mạng thật node, traffic gửi tới Service sẽ đến được các Pod phía sau.
+<mark>kube-proxy</mark> là một component chạy trên tất cả các Node, biến khái niệm <mark>Service</mark> thành các rule mạng thật trên các Node, traffic gửi tới Service sẽ đến được các Pod phía sau.
 
 ### container runtime
 <mark>container runtime</mark> là thành phần chịu trách nhiệm chạy và quản lý vòng đời container trong Kubernetes.
