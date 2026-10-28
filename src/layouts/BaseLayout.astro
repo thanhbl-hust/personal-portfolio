@@ -72,6 +72,38 @@ const imageURL = new URL(withBase(image), Astro.site);
 	</body>
 </html>
 
+<script>
+	// Scroll reveal: elements marked [data-reveal] fade in as they scroll into view (styles in global.css).
+	// Only elements below the fold are hidden, so nothing on screen at load flickers, and without JS everything stays visible.
+	const STAGGER_MS = 100;
+	const MAX_STAGGER_STEPS = 4;
+	const below = [...document.querySelectorAll<HTMLElement>('[data-reveal]')].filter(
+		(el) => el.getBoundingClientRect().top > window.innerHeight,
+	);
+
+	if (below.length > 0 && 'IntersectionObserver' in window) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				// Elements that enter together appear one after another
+				entries
+					.filter((entry) => entry.isIntersecting)
+					.forEach((entry, index) => {
+						const el = entry.target as HTMLElement;
+						el.style.setProperty('--reveal-delay', `${Math.min(index, MAX_STAGGER_STEPS) * STAGGER_MS}ms`);
+						el.dataset.reveal = 'shown';
+						observer.unobserve(el);
+					});
+			},
+			{ rootMargin: '0px 0px -48px 0px' },
+		);
+
+		for (const el of below) {
+			el.dataset.reveal = 'hidden';
+			observer.observe(el);
+		}
+	}
+</script>
+
 <style>
 	.main {
 		flex: 1;
