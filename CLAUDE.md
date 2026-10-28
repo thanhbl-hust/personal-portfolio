@@ -105,6 +105,7 @@ ci: pin pages actions to latest major versions
 │   │   ├── blog/
 │   │   │   ├── index.astro       # Post list with search and tags (/blog/)
 │   │   │   ├── [...slug].astro   # Single post (/blog/<slug>/)
+│   │   │   ├── search.json.ts    # Post body text for the search box, fetched on first use (/blog/search.json)
 │   │   │   └── tags/
 │   │   │       └── [tag].astro   # Posts with a given tag (/blog/tags/<tag>/)
 │   │   ├── og/                   # Social preview images (og:image), rendered to PNG at build time
@@ -121,7 +122,7 @@ ci: pin pages actions to latest major versions
 │   │   ├── og.ts                 # renderOgImage(): terminal-style social preview cards (Satori + sharp)
 │   │   ├── posts.ts              # Blog helpers: getPosts, getTags, getTocItems, post/tag URLs, dates
 │   │   ├── stats.ts              # Lines added per day from git history, drawn as an SVG bar chart
-│   │   ├── text.ts               # foldText() for accent-insensitive matching and slugs
+│   │   ├── text.ts               # foldText() for accent-insensitive matching and slugs, markdownToText() for search
 │   │   └── url.ts                # withBase() for base-path-aware links
 │   ├── config.ts                 # Site-wide settings: title, initials, nav links
 │   └── content.config.ts         # Content collections and the blog frontmatter schema
@@ -143,7 +144,7 @@ ci: pin pages actions to latest major versions
 | `src/content/blog/`        | Blog posts. Each post is a folder named after its URL slug, containing `index.md` and an `images/` folder.                                    |
 | `src/data/`                | Content as typed data. Edit `cv.ts` to change what the CV page shows — no markup changes needed.                                              |
 | `src/layouts/`             | Page shells. `BaseLayout` holds `<head>` metadata, fonts, theme script, nav, and footer; `PostLayout` wraps it for blog posts.               |
-| `src/pages/`               | Routes. Each `.astro` file becomes a page at the matching URL; `[param]` files generate one page per post or tag. `og/*.png.ts` endpoints generate the social preview images, and `stats/lines-added.svg.ts` the README chart. |
+| `src/pages/`               | Routes. Each `.astro` file becomes a page at the matching URL; `[param]` files generate one page per post or tag. `og/*.png.ts` endpoints generate the social preview images, `stats/lines-added.svg.ts` the README chart, and `blog/search.json.ts` the post text the blog search box matches against. |
 | `src/plugins/`             | Markdown processor plugins, written against the Sätteri plugin API.                                                                           |
 | `src/styles/`              | Global CSS only. Component-specific styles live in each component's `<style>` block.                                                         |
 | `src/utils/`               | Plain TypeScript helpers with no markup.                                                                                                      |
@@ -161,6 +162,7 @@ ci: pin pages actions to latest major versions
 - **Floating buttons**: use the global `.fab` class for buttons fixed to the bottom-right corner, and stack them so they don't overlap (BackToTop at the bottom, the table of contents toggle above it).
 - **Font**: JetBrains Mono for all text.
 - **Motion**: `global.css` turns off every animation and transition for visitors who ask for reduced motion. Short transitions the visitor triggers on purpose (the table of contents drawer, the theme switch knob) opt out with the `data-keep-motion` attribute.
+- **Scroll reveal**: elements marked `data-reveal` (CV section titles, about paragraphs, timeline items, tech stack groups) fade and slide up as they scroll into view. The script in `BaseLayout.astro` hides only the ones below the fold at load, so the page stays fully visible without JavaScript. Visitors who ask for reduced motion get the fade without the slide.
 - **Social previews**: every page has an `og:image`. Pages use `/og/site.png` by default; posts pass their own `/og/blog/<slug>.png` through `BaseLayout`'s `image` prop. The images are drawn by `src/utils/og.ts`, which copies the dark theme colors from `global.css` (CSS variables don't exist outside the browser), so change both together. The README chart (`src/utils/stats.ts`) reuses those colors.
 - **README chart**: `README.md` embeds `/stats/lines-added.svg` from the live site, which counts lines added per day with `git log --numstat` at build time (the day before the first commit is 0, and `package-lock.json` and binary files are skipped). It updates on every deploy, so never commit a static copy of it.
 
