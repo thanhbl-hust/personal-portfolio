@@ -1,30 +1,56 @@
 <div class="search">
 	<label class="sr-only" for="post-search">Search posts</label>
 	<span class="prompt" aria-hidden="true">$ grep</span>
-	<input id="post-search" type="search" placeholder="title, description, or tag" autocomplete="off" />
+	<input id="post-search" type="search" placeholder="title, tag, or content" autocomplete="off" />
 	<kbd class="hint" aria-hidden="true">/</kbd>
 </div>
 
 <script>
 	import { foldText } from '../../utils/text';
+	import { withBase } from '../../utils/url';
 
 	// Filters the post list on the same page by matching every search term against [data-search]
+	// (title, description, tags) and the post's body text from /blog/search.json
 	const input = document.querySelector<HTMLInputElement>('#post-search');
 	const posts = document.querySelectorAll<HTMLElement>('[data-post-list] [data-search]');
 	const empty = document.querySelector<HTMLElement>('[data-search-empty]');
 
 	if (input) {
-		input.addEventListener('input', () => {
+		let bodies: Record<string, string> = {};
+		let bodiesRequested = false;
+
+		const filter = () => {
 			const terms = foldText(input.value).split(/\s+/).filter(Boolean);
 			let visible = 0;
 
 			posts.forEach((post) => {
-				const match = terms.every((term) => post.dataset.search?.includes(term));
+				const text = `${post.dataset.search} ${bodies[post.dataset.postId ?? ''] ?? ''}`;
+				const match = terms.every((term) => text.includes(term));
 				post.hidden = !match;
 				if (match) visible += 1;
 			});
 
 			if (empty) empty.hidden = visible > 0;
+		};
+
+		// Body text is fetched once, the first time the box is focused or typed in. Until it arrives (or if the
+		// request fails), the search still matches title, description, and tags.
+		const loadBodies = () => {
+			if (bodiesRequested) return;
+			bodiesRequested = true;
+			fetch(withBase('/blog/search.json'))
+				.then((response) => (response.ok ? response.json() : {}))
+				.then((data) => {
+					bodies = data;
+					filter();
+				})
+				.catch(() => {});
+		};
+
+		input.addEventListener('focus', loadBodies);
+		input.addEventListener('input', () => {
+			loadBodies();
+			filter();
 		});
 
 		document.addEventListener('keydown', (event) => {
