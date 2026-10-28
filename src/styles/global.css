@@ -184,9 +184,28 @@ ol {
 	border: 0;
 }
 
-/* Reduced motion turns animations off, except short ones the visitor triggers on purpose, marked [data-keep-motion] */
+/* Scroll reveal: BaseLayout marks [data-reveal] elements below the fold as hidden, then shows them as they scroll into view */
+@media screen {
+	[data-reveal='hidden'] {
+		opacity: 0;
+		transform: translateY(1rem);
+	}
+
+	[data-reveal='shown'] {
+		transition:
+			opacity 0.6s ease-out var(--reveal-delay, 0s),
+			transform 0.6s ease-out var(--reveal-delay, 0s);
+	}
+}
+
+/* Reduced motion turns animations off, except short ones the visitor triggers on purpose, marked [data-keep-motion],
+   and the scroll reveal, which only fades */
 @media (prefers-reduced-motion: reduce) {
-	*:not([data-keep-motion]),
+	[data-reveal='hidden'] {
+		transform: none;
+	}
+
+	*:not([data-keep-motion], [data-reveal]),
 	*::before,
 	*::after {
 		animation: none !important;
