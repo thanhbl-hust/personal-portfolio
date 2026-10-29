@@ -7,7 +7,48 @@ tags: [kubernetes]
 
 ## Pod
 
+<mark>Pod</mark> là đơn vị triển khai nhỏ nhất mà bạn có thể tạo ra và quản lý trong Kubernetes.
+
+Một Pod có thể là một nhóm bao gồm một hoặc nhiều **container**, các container này chia sẻ chung tài nguyên về mạng (network) và lưu trữ (storage). 
+
+### Static Pod
+
+
+<mark>Static Pod</mark> là các Pod được tạo ra và quản lý bằng kubelet tại mỗi Node thông qua các file manifest (staticPodPath - cấu hình của kubelet, mặc định ở **/etc/kubernetes/manifests/**), chứ không phải thông qua api-server. 
+
+Ta vẫn quan sát được các Pod này thông qua **kubectl** là vì kubelet tạo ra các **Mirror Pod**,  nhưng chỉ để quan sát. Ta không thay đổi được các Pod này thông qua API, phải thông qua file manifest của chúng và kubelet sẽ tự động cập nhật. 
+
+> [!NOTE]
+> Trường hợp phổ biến nhất là kubeadm dùng Static Pod để chạy các thành phần của Control Plane (api-server, etcd, controller manager & scheduler).
+
+Tên của Static Pod sẽ có hậu tố là tên Node mà nó nằm trên đó. Ví dụ, pod **api-server** nằm trên node **control-plane** sẽ có tên là **api-server-control-plane**.
+
+### Sidecar, Init, Ephemeral & Pause Container 
+
+Trong mỗi Pod sẽ có một hoặc nhiều container, và mỗi loại container sẽ có các công dụng khác nhau.
+
+1. Sidecar Container
+
+2. Init Container
+
+3. Ephemeral Container
+
+4. Pause Container
+
 ## ReplicaSet & Deployment
+
+<mark>ReplicaSet</mark> controller là một controller trong Kubernetes giúp đảm bảo luôn có một số lượng Pod giống nhau đang chạy tại một thời điểm.
+
+<mark>Deployment</mark> controller là một resource ở lớp cao hơn so với ReplicaSet. Nó không quản lý trực tiếp các Pod mà quản lý các ReplicaSet. Mỗi lần Pod template thay đổi, Deployment sẽ tạo một ReplicaSet mới và tạo các Pod mới theo các cơ chế như **Rolling Update** hay **ReCreate**.
+
+
+- **ReCreate**: xóa tất cả các Pod với template cũ rồi sau đó mới tạo Pod mới.
+
+- **RollingUpdate**: thực hiện đồng thời việc xóa các Pod cũ và tạo các Pod mới.
+
+    - *maxSurge*: được phép có dư bao nhiêu Pod so với replica.
+    - *maxUnavaible*: được phép tối đa bao nhiêu Pod thiếu so với replica.
+Đơn vị của maxSurge và maxUnavaiable đều có thể là **Pod** hoặc **%**.
 
 ## StatefulSet
 
