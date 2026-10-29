@@ -22,7 +22,7 @@ tags: [kubernetes, architecture]
 
 ### scheduler
 
-<mark>scheduler</mark> là một controller trong Kubernetes giúp cho việc phân chia các Pod mới được tạo ra về các Node phù hợp dựa trên cấu hình của chúng. 
+<mark>scheduler</mark> là một controller trong Kubernetes giúp cho việc điều phối các Pod mới được tạo ra về các Node phù hợp dựa trên cấu hình của chúng. 
 
 ### controller-manager
 
