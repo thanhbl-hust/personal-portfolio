@@ -27,13 +27,22 @@ Tên của Static Pod sẽ có hậu tố là tên Node mà nó nằm trên đó
 
 Trong mỗi Pod sẽ có một hoặc nhiều container, và mỗi loại container sẽ có các công dụng khác nhau.
 
-1. Sidecar Container
+1. **Sidecar Container**
 
-2. Init Container
+2. **Init Container**
 
-3. Ephemeral Container
+3. **Ephemeral Container**
 
-4. Pause Container
+4. **Pause Container**
+
+### Probes trong Kubernetes
+
+1. **Startup Probes**: Startup Probes là cơ chế giúp kubelet xác định xem Pod đã khởi động đúng cách hay chưa. Startup Probes sẽ được thực hiện đầu tiên nếu được khai báo, Liveness và Readiness sẽ không chạy nếu Startup chưa thành công. Nếu thành công, Startup không chạy nữa và các cơ chế còn lại bắt đầu chạy. Nếu Fail, kubelet sẽ restart Container dựa theo restartPolicy.
+
+2. **Liveness Probes**: Liveness Probes giúp Kubernetes xác định một Pod có đang hoạt động đúng cách hay không và kubelet sẽ làm gì với nó (restart hoặc trả về **Fail** dựa theo restartPolicy).
+
+3. **Readiness Probes**: Readiness Probes là cơ chế giúp Kubernetes xác định xem Pod đã sẵn sàng để nhận traffic hay chưa (đưa vào hoặc xóa khỏi Endpoint của **Service**).
+
 
 ## ReplicaSet & Deployment
 
