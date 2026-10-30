@@ -23,7 +23,7 @@ Ta vẫn quan sát được các Pod này thông qua **kubectl** là vì kubelet
 
 Tên của Static Pod sẽ có hậu tố là tên Node mà nó nằm trên đó. Ví dụ, pod **api-server** nằm trên node **control-plane** sẽ có tên là **api-server-control-plane**.
 
-### Sidecar, Init, Ephemeral & Pause Container 
+### Sidecar, Init, Ephemeral & Pause Container
 
 Trong mỗi Pod sẽ có một hoặc nhiều container, và mỗi loại container sẽ có các công dụng khác nhau.
 
@@ -41,6 +41,7 @@ Trong mỗi Pod sẽ có một hoặc nhiều container, và mỗi loại contai
 
 <mark>Deployment</mark> controller là một resource ở lớp cao hơn so với ReplicaSet. Nó không quản lý trực tiếp các Pod mà quản lý các ReplicaSet. Mỗi lần Pod template thay đổi, Deployment sẽ tạo một ReplicaSet mới và tạo các Pod mới theo các cơ chế như **Rolling Update** hay **ReCreate**.
 
+Deployment thường được sử dụng để quản lý các ứng dụng **stateless**.
 
 - **ReCreate**: xóa tất cả các Pod với template cũ rồi sau đó mới tạo Pod mới.
 
@@ -48,10 +49,25 @@ Trong mỗi Pod sẽ có một hoặc nhiều container, và mỗi loại contai
 
     - *maxSurge*: được phép có dư bao nhiêu Pod so với replica.
     - *maxUnavaible*: được phép tối đa bao nhiêu Pod thiếu so với replica.
+
 Đơn vị của maxSurge và maxUnavaiable đều có thể là **Pod** hoặc **%**.
 
 ## StatefulSet
 
+<mark>StatefulSet</mark> controller cũng là một resource để quản lý các Pod, nhưng khác với Deployment, nó quản lý những Pod cần lưu trạng thái, hay **Stateful** (database, kafka, redis..).
+
+Các Pod được StatefulSet quản lý sẽ có những đặc điểm sau:
+- Pod sẽ được tạo, xóa và đặt tên theo đúng trình tự (redis-0, redis-1, ..).
+- Mỗi Pod sẽ có PVC riêng.
+
+> [!NOTE]
+> BEST PRACTICE: Thường sẽ là chúng ta sẽ quản lý các app Stateless trong Kubernetes, còn những app Stateful chúng ta sẽ sử dụng managed-service (RDS, MSK, ..). Tùy từng trường hợp (chi phí, kinh nghiệm của nhân sự) mà chúng ta có thể sử dụng phương án phù hợp.
+
 ## DaemonSet
+
+<mark>DaemonSet</mark> controller là một resource để đảm bảo rằng tất cả các Node (hoặc một tập hợp các Node thỏa mãn điều kiện nào đó) đều có một Pod chạy trên Node đó.
+
+> [!NOTE]
+> Các use case dùng DaemonSet có thể như Logging, Monitoring, CNI, CSI...
 
 ## Job & Cronjob
